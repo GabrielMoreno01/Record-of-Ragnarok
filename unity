@@ -1,1 +1,34 @@
+using UnityEngine;
 
+public class ComboSystem : MonoBehaviour
+{
+    public Animator animator;
+    private int comboStep = 0; // Etapa atual do combo
+    private float comboTimer = 0f;
+    public float comboResetTime = 1f; // Tempo para reiniciar o combo
+
+    void Update()
+    {
+        // Contador para reiniciar o combo
+        if (comboTimer > 0)
+            comboTimer -= Time.deltaTime;
+        else
+            comboStep = 0;
+
+        // Detecta entrada de ataque
+        if (Input.GetButtonDown("Fire1")) // Botão de ataque leve
+            TriggerCombo("LightAttack");
+        if (Input.GetButtonDown("Fire2")) // Botão de ataque pesado
+            TriggerCombo("HeavyAttack");
+    }
+
+    void TriggerCombo(string attackType)
+    {
+        if (comboStep == 0 || comboTimer > 0) // Apenas avança no combo se estiver no tempo correto
+        {
+            comboStep++;
+            comboTimer = comboResetTime; // Reinicia o contador de tempo do combo
+            animator.SetTrigger(attackType + comboStep); // Chama animações específicas do combo
+        }
+    }
+}
